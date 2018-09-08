@@ -2,9 +2,8 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from assignment.models import Attributes,Product,Category,Product_Attributes
-from assignment.serializers import AttributeSerializer,ProductSerializer,CategorySerializer,ProductAttribueSerializer
+from assignment.serializers import AttributeSerializer,ProductSerializer,CategorySerializer
 from django.http import JsonResponse
-
 
 @api_view(['GET', 'POST'])
 def attribute_list(request):
@@ -142,45 +141,3 @@ def category_detail(request, pk):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-@api_view(['GET', 'POST'])
-def product_attribute_list(request):
-    """
-    List all Categories, or create a new Categories.
-    """
-    if request.method == 'GET':
-        categories = Category.objects.all()
-        serializer = CategorySerializer(categories, many=True)
-        return JsonResponse(serializer.data, safe=False)
-
-    elif request.method == 'POST':
-        serializer = CategorySerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(['GET', 'PUT', 'DELETE'])
-def product_attribute_detail(request, pk):
-    """
-    Retrieve, update or delete a Product.
-    """
-    try:
-        category = Category.objects.get(pk=pk)
-    except Category.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    if request.method == 'GET':
-        serializer = CategorySerializer(category)
-        return JsonResponse(serializer.data, safe=False)
-
-    elif request.method == 'PUT':
-        serializer = CategorySerializer(category, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    elif request.method == 'DELETE':
-        category.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)

@@ -21,7 +21,3 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = ('id','product_name','product_description','product_active','category')
 
 
-class ProductAttributeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Product_Attributes
-        fields = ('product_id','product_name','product_description','product_active','attribute_id','attribute_name','attribute_description','attribute_value')
